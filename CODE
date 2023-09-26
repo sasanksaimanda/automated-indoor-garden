@@ -1,0 +1,38 @@
+#CODE
+#importing required libraries
+import RPi.GPIO as GPIO
+from time import sleep
+import datetime
+GPIO.setmode(GPIO.BOARD)
+GPIO.setwarnings(False)
+#initializing the pinnings
+SOIL=15
+RLY=37
+LIGHT=35
+#setting up the input and output functions
+GPIO.setup(RLY,GPIO.OUT)
+GPIO.setup(SOIL,GPIO.IN)
+GPIO.setup(LIGHT,GPIO.OUT)
+GPIO.output(RLY,0)
+GPIO.output(LIGHT,0)
+def main():
+while True:
+time=datetime.datetime.now()
+#displaying the present time
+print("Current time ",time.hour,":",time.minute)
+#SOIL gives input as TRUE or FALSE
+if GPIO.input(SOIL): #runs if true
+GPIO.output(RLY,1) #gives the pump input to turn on
+print("SOIL LEVEL VERY LOW")
+sleep(1) #sleeps for 1ms
+else: #runs if above is false
+GPIO.output(RLY,0) #gives the pump input to turn off
+print("ALL IS WELL")
+sleep(1) #sleeps for 1ms
+if time.hour>=8 and time.hour<=17: #applying the daylight conditions for the artificial lights
+GPIO.output(LIGHT,1) #gives lights input to turn on
+print("current time")
+else:
+GPIO.output(LIGHT,0) #gives lights input to turn off
+if __name__ == '__main__': #runs the whole code
+main()
